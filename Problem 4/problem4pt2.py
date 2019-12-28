@@ -38,10 +38,24 @@ def IncreaseOrEqual(number):
 # 111122 meets the criteria (even though 1 is repeated more than twice, it still contains a double 22)
 # 248889
 def WtfCriteriaWordingIsBad(prevValidPass):
-    print(prevValidPass)
     valid = True
-    
-    return valid
+    patterns = []
+    sub = ""
+    i = 5
+    while i >= 0:
+        sub = str(GetDigit(prevValidPass, i))
+        #print("Outer: " + sub)
+        j = i - 1
+        while j >= 0:
+            #print("Inner: {0}:{1}".format(GetDigit(prevValidPass, i),GetDigit(prevValidPass, j)))
+            if(GetDigit(prevValidPass, i) == GetDigit(prevValidPass, j)):
+                sub += str(GetDigit(prevValidPass, j))
+            else:
+                break
+            j -= 1
+        patterns.append(sub)
+        i = j
+    return patterns
 
 # Generates a list of passwords that meet the criteria in problem 4 part 1 from a list of passwords
 # Criteria
@@ -54,14 +68,22 @@ def ValidPasswords(list):
             validPasswords.append(num)
     return validPasswords
 
+def GoodPattern(pattern):
+    return (len(pattern) == 2)
+
 passwords = GeneratePasswords(low, high)
 validPasswords = ValidPasswords(passwords)
-print(validPasswords)
 print("Number of valid passwords pt1 rules: {0}".format(len(validPasswords)))
 new_validPasswords = []
-for prevValidPass in validPasswords:
-    if(WtfCriteriaWordingIsBad(prevValidPass)):
-        new_validPasswords.append(prevValidPass)
+
+# Get the new valid passwords with stupidly worded requirements
+for p in validPasswords:
+    patterns = WtfCriteriaWordingIsBad(p)
+    valid = False
+    for pattern in patterns:
+        if GoodPattern(pattern):
+            valid = True
+    if(valid):
+        new_validPasswords.append(p)
+
 print("Number of valid passwords pt2 rules: {0}".format(len(new_validPasswords)))
-print(new_validPasswords)
-#print(WtfCriteriaWordingIsBad(248888))
