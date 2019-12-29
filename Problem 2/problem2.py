@@ -49,7 +49,6 @@ if DEBUG:
 # Restore system state per website
 code[1] = 12
 code[2] = 2
-
 # Run the program
 ExecuteIntcode(code)
-print("Value at index 0: {0}", code[0])
+print("Value at index 0: {0}".format(code[0]))
