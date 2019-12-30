@@ -1,5 +1,3 @@
-# Find the pair (noun / verb) that produces 19690720 given the equation 100 * noun + verb
-
 DEBUG = False
 # Opcodes should be 5 integers long, we will store as a string
 OPCODE_LEN = 5
