@@ -39,6 +39,19 @@ class Vertex:
     def GetName(self):
         return self.name
 
+    def __hash__(self):
+        return hash(self.GetName())
+
+    def __eq__(self, other):
+        if not isinstance(other, Vertex):
+            return NotImplemented
+        return (self.GetName() == other.GetName())
+
+    def __ne__(self, other):
+        if not isinstance(other, Vertex):
+            return NotImplemented
+        return (self.GetName() != other.GetName())
+
 class Graph:
 
     # Class constructor for initializing the Graph using a diction
@@ -107,7 +120,8 @@ class Graph:
     # Returns distance associated with the path
     def PathDistance(self, path):
         dist = 0
-        if(len(path) == 1):
+        # Use <= 1 so if a path that is empty shows up, the length is 0
+        if(len(path) <= 1):
             return 0
         else:
             source = path[0]
@@ -116,7 +130,7 @@ class Graph:
 
     # Returns all paths between nodes source and dest
     # Path list is empty if no path exists
-    def FindAllPaths(self, source, dest, path):
+    def FindAllPaths(self, source, dest, path=[]):
         path = path + [source]
         newpaths = []
         paths = []
@@ -142,6 +156,31 @@ class Graph:
                 minPath = path
         return (minDist, minPath)
 
+    # DepthFirstSearch algorithm from the starting source
+    def DepthFirstSearch(self, source, explored=[]):
+        explored += [source]
+        if(len(source.GetNeighbors()) == 0):
+            return 1
+        for neighbor in source.GetNeighbors():
+            if neighbor not in explored:
+                self.DepthFirstSearch(neighbor, explored)
+        return explored
+
+    # Calculates the Orbit Count Checksum
+    def OrbitCountChecksum(self, source):
+        allPaths = []
+        checksum = 0
+        for v in self.vertices:
+            if(v != source):
+                allPaths.append(self.FindAllPaths(source, v))
+        for paths in allPaths:
+            for p in paths:
+                # Remove COM
+                p.pop(0)
+                checksum += len(p)
+        return checksum
+
+
 # For testing purposes
 if __name__ == "__main__":
     a = Vertex('A')
@@ -157,14 +196,13 @@ if __name__ == "__main__":
     g.AddEdge(a,b,5)
     g.AddEdge(b,c,3)
     g.AddEdge(c,f,4)
-    g.AddEdge(a,d,2)
-    g.AddEdge(d,e)
-    g.AddEdge(e,f,2)
-    g.AddEdge(f,h)
     g.AddEdge(a,i)
     g.AddEdge(i,j)
     g.AddEdge(j,f)
-    paths = []
-    paths = g.FindAllPaths(a, f, paths)
+    g.AddEdge(a,d,4)
+    g.AddEdge(d,e)
+    g.AddEdge(e,f,2)
+    g.AddEdge(f,h)
+    paths = g.FindAllPaths(a, f)
     print("All Paths from a to f: {0}".format(paths))
     print("Minimum path: {0}".format(g.FindShortestPath(a,f)))
