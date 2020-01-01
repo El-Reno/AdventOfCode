@@ -1,7 +1,9 @@
 DEBUG = False
+# USER for user input, AUTO for a list input
+INPUT_MODE = "USER"
 
 # Declare variables to read input and execute the program
-path = "./input.txt"
+path = "./example1.txt"
 file = open(path, 'r')
 code = []
 
@@ -86,9 +88,10 @@ def ExecuteIntcode():
         # Input opcode
         elif(opcode[1] == '03'):
             incrementor = 2
-            user_input = input("Enter a value: ")
-            user_int = int(user_input)  # Should probably error check
-            WriteOpcodePosition(opcode_index+1, user_int)
+            if INPUT_MODE == "USER":
+                user_input = input("Enter a value: ")
+                user_int = int(user_input)  # Should probably error check
+                WriteOpcodePosition(opcode_index+1, user_int)
             opcode_index += incrementor
         # Output opcode
         elif(opcode[1] == '04'):
