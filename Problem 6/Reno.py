@@ -119,9 +119,9 @@ class Graph:
     def FindAllPaths(self, source, dest, path):
         path = path + [source]
         newpaths = []
+        paths = []
         if(source.GetName() == dest.GetName()):
             return [path]
-        paths = []
         for neighbor in source.GetNeighbors():
             if neighbor not in path:
                 newpaths = self.FindAllPaths(neighbor, dest, path)
