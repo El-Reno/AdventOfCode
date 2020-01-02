@@ -3,14 +3,16 @@ class IntcodeComputer:
     code = []
     intcode = ""
     DEBUG = False
+    output = 0
+    INPUT_MODE = "USER"
     # Constructor for IntcodeComputer
     # Parameter intcode is a string of the incode with whitespace removed
     # DEBUG parameter to print debug statements
-    def __init__(self, intcode, DEBUG=False):
+    def __init__(self, intcode, inMode="USER", DEBUG=False):
         self.intcode = intcode
         self.DEBUG = DEBUG
-        self.intcode = intcode
         self.ReadIntcode(self.intcode)
+        self.INPUT_MODE = inMode
 
     # Outputs if the memory location is within the opcode
     # Requires integer arguments
@@ -50,7 +52,7 @@ class IntcodeComputer:
         # So, use the python function to pad the string with zeros to ensure the string length is 5
         return (opcode_string[:3], opcode_string[3:])
 
-    def ExecuteIntcode(self):
+    def ExecuteIntcode(self, inputs=[]):
         opcode_index = 0
         incrementor = 0
         length = len(self.code)
@@ -93,15 +95,19 @@ class IntcodeComputer:
             # Input opcode
             elif(opcode[1] == '03'):
                 incrementor = 2
-                user_input = input("Enter a value: ")
-                user_int = int(user_input)  # Should probably error check
-                self.WriteOpcodePosition(opcode_index+1, user_int)
+                if(self.INPUT_MODE == "USER"):
+                    user_input = input("Enter a value: ")
+                    input = int(user_input)  # Should probably error check
+                elif(self.INPUT_MODE == "AUTO"):
+                    input = inputs.pop(0)
+                self.WriteOpcodePosition(opcode_index+1, input)
                 opcode_index += incrementor
             # Output opcode
             elif(opcode[1] == '04'):
                 incrementor = 2
                 value1_mode = opcode[0][2]
                 value = self.ReadOpcodePosition(opcode_index+1,value1_mode)
+                self.output = value
                 if(value == 0):
                     print("Program Output: {0}".format(value))
                 else:
@@ -204,6 +210,10 @@ class IntcodeComputer:
     # Returns the intcode code array
     def GetIntcodeArray(self):
         return self.code
+
+    # Returns the value currently stored in the program output variable
+    def GetCurrentOutput(self):
+        return self.output
 
     # Read input and place into code array
     def ReadIntcode(self, intcode):

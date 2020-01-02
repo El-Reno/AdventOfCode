@@ -5,10 +5,10 @@ from Reno.Advent import IntcodeComputer as IC
 f = open('input.txt','r')
 i = f.read().strip()
 
-c = IC.IntcodeComputer(i)
+c = IC.IntcodeComputer(i, "AUTO")
 print("Code string before: {0}".format(c.GetIntcodeString()))
 print("Code array before: {0}".format(c.GetIntcodeArray()))
-c.ExecuteIntcode()
+c.ExecuteIntcode(1)
 print("Code string after: {0}".format(c.GetIntcodeString()))
 print("Code array after: {0}".format(c.GetIntcodeArray()))
 c.ResetIntcode()
