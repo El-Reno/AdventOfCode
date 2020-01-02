@@ -1,13 +1,15 @@
 class IntcodeComputer:
     # Declare variables to read input and execute the program
     code = []
+    intcode = ""
     DEBUG = False
     # Constructor for IntcodeComputer
-    # Requires the intcode file
+    # Parameter intcode is a string of the incode with whitespace removed
     # DEBUG parameter to print debug statements
     def __init__(self, intcode, DEBUG=False):
         self.intcode = intcode
         self.DEBUG = DEBUG
+        self.intcode = intcode
         self.ReadIntcode(self.intcode)
 
     # Outputs if the memory location is within the opcode
@@ -190,8 +192,26 @@ class IntcodeComputer:
                     self.WriteOpcodePosition(opcode_index+3, 0)
                 opcode_index += incrementor
 
+    # Resets intcode to original state
+    def ResetIntcode(self):
+        self.code = []
+        self.ReadIntcode(self.intcode)
+
+    # Returns the intcode string
+    def GetIntcodeString(self):
+        return self.intcode
+
+    # Returns the intcode code array
+    def GetIntcodeArray(self):
+        return self.code
+
     # Read input and place into code array
-    def ReadIntcode(self, file):
+    def ReadIntcode(self, intcode):
+        for item in intcode.split(','):
+            self.code.append(int(item))
+
+    # Reads new intcode file and stores the input into the intcode variable
+    def ReadIntcodeFile(self, file):
         input = file.read()
         for item in input.split(','):
             self.code.append(int(item))
